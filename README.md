@@ -1,57 +1,36 @@
-
 1. การจัดการสถานะด้วย GetX
-เราจะใช้ GetxController เพื่อจัดการสถานะของแอปพลิเคชันทั้งหมด และใช้ตัวแปรแบบ reactive เพื่อให้ UI อัปเดตตัวเองได้โดยอัตโนมัติเมื่อสถานะเปลี่ยนไป
+แอปพลิเคชันนี้ใช้ GetxController เป็นศูนย์กลางในการจัดการข้อมูลทั้งหมด โดยใช้ตัวแปรแบบ Reactive เพื่อให้การอัปเดต UI เป็นไปอย่างราบรื่นและอัตโนมัติ
 
-ตัวแปร Reactive: ใช้ RxList สำหรับรายชื่อโปเกมอนที่ถูกเลือกในทีม และ RxString สำหรับชื่อทีมปัจจุบัน
+ตัวแปร Reactive:
 
-final RxList<Pokemon> selectedTeam = <Pokemon>[].obs;
+final RxList<Pokemon> team = <Pokemon>[].obs;
 
-final RxString teamName = 'My Awesome Team'.obs;
+final RxString teamName = 'My Team'.obs;
 
-การผูกกับ Widget: ใช้ Obx widget เพื่อครอบ widget ที่ต้องมีการเปลี่ยนแปลงตามสถานะของตัวแปร reactive เช่น ListView ของทีมโปเกมอน หรือ Text widget ที่แสดงชื่อทีม
+การเข้าถึง Controller: เราใช้ Get.put() เพื่อสร้าง Controller เพียงครั้งเดียวในระบบ และใช้ Get.find() เพื่อเข้าถึง Controller ตัวนั้นจากส่วนต่าง ๆ ของแอป
 
-การเข้าถึง Controller: ใช้ Get.put() ในการสร้างและใส่ Controller เข้าไปในระบบครั้งแรก และใช้ Get.find() เพื่อดึง Controller ที่มีอยู่แล้วมาใช้ใน widget ต่าง ๆ
+2. TeamController
+นี่คือส่วนที่รวบรวม Logic การทำงานทั้งหมดของแอป
 
-2. การสร้าง Controller (TeamController)
-Controller นี้จะเป็นศูนย์กลางในการจัดการ logic และสถานะทั้งหมดของแอป
+addPokemon(Pokemon pokemon): เมธอดสำหรับเพิ่มโปเกมอนเข้าทีม จะมีเงื่อนไขตรวจสอบจำนวนสมาชิกในทีม (ไม่เกิน 3 ตัว) และป้องกันการเลือกซ้ำ
 
-Logic การเพิ่ม/ลบสมาชิก:
+removePokemon(Pokemon pokemon): เมธอดสำหรับลบโปเกมอนออกจากทีม
 
-สร้างเมธอด addPokemon(Pokemon pokemon) ที่จะเช็คเงื่อนไขก่อนเพิ่ม (จำนวนไม่เกิน 3 ตัว และไม่ซ้ำ)
+changeTeamName(String newName): เมธอดสำหรับเปลี่ยนชื่อทีม
 
-สร้างเมธอด removePokemon(Pokemon pokemon) เพื่อลบโปเกมอนออกจากทีม
-
-Logic การจัดการชื่อทีม:
-
-สร้างเมธอด changeTeamName(String newName) เพื่อแก้ไขชื่อทีม
-
-Logic การรีเซ็ตทีม:
-
-สร้างเมธอด resetTeam() เพื่อล้างค่าใน selectedTeam ให้ว่างเปล่า
+resetTeam(): เมธอดสำหรับล้างสมาชิกในทีมทั้งหมด
 
 3. ส่วนประกอบของหน้าจอ (Widgets)
-AppBar:
+หน้าหลัก (Home Page):
 
-ใช้ Obx ครอบ Text widget เพื่อแสดงชื่อทีมปัจจุบัน (controller.teamName.value)
+AppBar: ภายใน Obx จะแสดงชื่อทีมปัจจุบัน และมีปุ่มสำหรับเปลี่ยนชื่อหรือรีเซ็ตทีม
 
-มี IconButton สำหรับเปลี่ยนชื่อทีม เมื่อกดแล้วจะเรียกเมธอด changeTeamName() ของ Controller
-
-มี IconButton สำหรับรีเซ็ตทีม เมื่อกดจะเรียกเมธอด resetTeam()
-
-รายการโปเกมอน (ListView):
-
-สร้าง ListView.builder ที่แสดงรายการโปเกมอนทั้งหมด
-
-แต่ละรายการโปเกมอน (list tile) จะมี GestureDetector เพื่อให้ผู้ใช้แตะเพื่อเลือกหรือลบ
-
-ภายใน list tile จะใช้ Obx เพื่อเปลี่ยน icon (Icon(Icons.add) หรือ Icon(Icons.check)) ตามสถานะว่าโปเกมอนตัวนั้นถูกเลือกแล้วหรือไม่ (controller.selectedTeam.contains(pokemon))
+ListView: แสดงรายการโปเกมอนที่เลื่อนดูได้ ผู้ใช้สามารถแตะเพื่อเลือกหรือลบสมาชิกทีมได้ โดย Obx จะช่วยอัปเดตไอคอนสถานะการเลือกแบบเรียลไทม์
 
 หน้าสรุปทีม (Preview Page):
 
-เมื่อกดปุ่มเพื่อไปหน้านี้ ให้ใช้ Get.to() ในการเปลี่ยนหน้า
+หน้าจอจะใช้ Obx เพื่อตรวจสอบสถานะของทีม
 
-ในหน้านี้ ให้ใช้ Obx และตรวจสอบว่า controller.selectedTeam.isEmpty
+หากทีมว่าง (team.isEmpty) จะแสดงข้อความว่า "ยังไม่มีสมาชิกในทีม"
 
-ถ้าเป็นจริง ให้แสดง Text('ยังไม่มีสมาชิกในทีม')
-
-ถ้าไม่เป็นจริง ให้แสดง ListView ของโปเกมอนที่อยู่ในทีม
+หากมีสมาชิก จะแสดงรายการโปเกมอนที่ถูกเลือกไว้ในทีม
