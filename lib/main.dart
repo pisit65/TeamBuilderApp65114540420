@@ -4,6 +4,7 @@ import 'controllers/team_controller.dart';
 import 'pages/main_page.dart';
 import 'services/api_service.dart';
 
+
 void main() {
   // ลงทะเบียน dependency ที่นี่ที่เดียว
   Get.lazyPut<ApiService>(() => ApiService(), fenix: true);
@@ -17,7 +18,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp( // ✅ ต้องเป็น GetMaterialApp
+    return GetMaterialApp(
+      // ✅ ต้องเป็น GetMaterialApp
       title: 'Pokémon Team Builder',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

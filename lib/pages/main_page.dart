@@ -3,6 +3,11 @@ import 'package:get/get.dart';
 import '../controllers/team_controller.dart';
 import '../widgets/pokemon_list.dart';
 import 'team_preview_page.dart';
+import 'pokemon_detail_page.dart';
+import 'settings_page.dart';
+import 'team_manager_page.dart';
+
+
 
 class MainPage extends StatelessWidget {
   MainPage({super.key});
@@ -44,11 +49,11 @@ class MainPage extends StatelessWidget {
       appBar: AppBar(
         title: Obx(() => Text(teamCtrl.teamName.value)),
         actions: [
-          IconButton(
-            tooltip: 'Edit Team Name',
-            icon: const Icon(Icons.edit),
-            onPressed: () => _openRenameDialog(context),
-          ),
+          // IconButton(
+          //   tooltip: 'Edit Team Name',
+          //   icon: const Icon(Icons.edit),
+          //   onPressed: () => _openRenameDialog(context),
+          // ),
           IconButton(
             tooltip: 'Reset Team',
             icon: const Icon(Icons.refresh),
@@ -67,6 +72,21 @@ class MainPage extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () => Get.to(() => TeamPreviewPage()),
                     child: const Text('Preview Team'),
+                  ),
+                ),
+
+                const SizedBox(width: 8), // เว้นระยะระหว่างปุ่ม
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Get.to(() => SettingsPage()), // ✅ ใช้ Get.to
+                    child: const Text('Settings'),
+                  ),
+                ),
+
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Get.to(() => TeamManagerPage()), // ✅ ใช้ Get.to
+                    child: const Text('Manage Teams A/B/C'),
                   ),
                 ),
               ],

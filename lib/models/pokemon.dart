@@ -1,18 +1,19 @@
 class Pokemon {
   final int id;
-  final String name;
+  String name;        // <-- ต้องไม่เป็น final
   final String imageUrl;
+  final String type;
+  final int hp;
+  final int attack;
+  final int defense;
 
-  const Pokemon({
+  Pokemon({
     required this.id,
     required this.name,
     required this.imageUrl,
+    required this.type,
+    required this.hp,
+    required this.attack,
+    required this.defense,
   });
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || (other is Pokemon && other.id == id);
-
-  @override
-  int get hashCode => id.hashCode;
 }
